@@ -7,6 +7,8 @@ onnx-divider
 $ pip3 install onnigiri
 ```
 
+- [PyPI](https://pypi.org/project/onnigiri/)
+
 ## Usage
 [SSD](https://github.com/onnx/models/tree/master/vision/object_detection_segmentation/ssd)
 
@@ -32,6 +34,9 @@ $ onnigiri tiny-yolov3-11.onnx --fix-input-shape 'input_1' '1,3,256,256' 'image_
 ## Development Guide
 
 ```
-$ nix-shell
 $ poetry install
 ```
+
+## Related project
+
+- [onnion](https://github.com/Idein/onnion)

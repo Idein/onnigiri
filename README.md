@@ -1,6 +1,12 @@
 # onnigiri
 onnx-divider
 
+The purpose of this package is to create subgraphs by partitioning computational graphs in order to facilitate the development of applications.
+
+One of the problems in developing applications using deep learning models is that the DL model is not applicable by itself.
+For example, they may be have unnecessary nodes and some nodes are not supported some DL tools.
+This tool enable us to edit an onnx model freely and easily.
+
 ## Installation
 
 ```

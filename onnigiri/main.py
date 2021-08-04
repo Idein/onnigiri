@@ -68,6 +68,19 @@ def fix_subgraphs(graph: onnx.GraphProto) -> None:
                 fix_subgraph(g, graph.initializer)
 
 
+def validate_value_names(input_names: List[str], output_names: List[str], model: onnx.ModelProto) -> None:
+    names = input_names + output_names
+    value_names = (
+        [v.name for v in model.graph.value_info] + [v.name for v in model.graph.input] + [v.name for v in model.graph.output]
+    )
+
+    if all([n in value_names for n in names]):
+        return
+    else:
+        not_found_names = ", ".join([n for n in names if n not in value_names])
+        sys.exit(f"Error: not found the values: {not_found_names}")
+
+
 def onnigiri(
     input_path: str, output_path: str, input_names: List[str], output_names: List[str], shapes: Dict[str, List[int]]
 ) -> None:
@@ -80,6 +93,8 @@ def onnigiri(
     assert check, "Error: Simplified ONNX model could not be validated"
 
     fix_subgraphs(simplified_model.graph)
+
+    validate_value_names(input_names, output_names, simplified_model)
 
     with tempfile.NamedTemporaryFile() as tmp:
         onnx.save(simplified_model, tmp.name)

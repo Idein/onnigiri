@@ -43,6 +43,10 @@ $ onnigiri tiny-yolov3-11.onnx --fix-input-shape 'input_1' '1,3,256,256' 'image_
 
 Use [Netron](https://netron.app).
 
+- Why is the extracted subgraph different from the original subgraph?
+
+onnigiri apply [onnx-simplifier](https://github.com/daquexian/onnx-simplifier) before extraction.
+
 ## Development Guide
 
 ```

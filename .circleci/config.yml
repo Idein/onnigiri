@@ -1,8 +1,5 @@
 version: 2.1
 
-references:
-  python-versions: &python-versions ["3.8", "3.9"]
-
 commands:
   install-python-dev-tools:
     steps:

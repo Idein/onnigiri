@@ -1,12 +1,15 @@
+import sys
+
 import numpy as np
 import onnx
 import onnxruntime
-import sys
 
-def make_sess(path):
+
+def make_sess(path: str) -> onnxruntime.InferenceSession:
     sess_opts = onnxruntime.SessionOptions()
     sess_opts.log_severity_level = 3
-    return onnxruntime.InferenceSession(path, sess_options=sess_opts, providers=['CPUExecutionProvider'])
+    return onnxruntime.InferenceSession(path, sess_options=sess_opts, providers=["CPUExecutionProvider"])
+
 
 if __name__ == "__main__":
     assert len(sys.argv) == 5
@@ -14,7 +17,6 @@ if __name__ == "__main__":
     origin = sys.argv[2]
     pre = sys.argv[3]
     post = sys.argv[4]
-
 
     pre_model = onnx.load(pre)
     post_model = onnx.load(post)
@@ -36,7 +38,7 @@ if __name__ == "__main__":
     pre_sess = make_sess(pre)
     internal_values = pre_sess.run(internal_names, inputs)
     vs = dict()
-    for k,v in zip(internal_names, internal_values):
+    for k, v in zip(internal_names, internal_values):
         vs[k] = v
     post_sess = make_sess(post)
     outputs = post_sess.run(output_names, vs)
@@ -44,9 +46,8 @@ if __name__ == "__main__":
     sess = make_sess(origin)
     expeced = sess.run(output_names, inputs)
 
-
-    for a,b in zip(expeced, outputs):
+    for a, b in zip(expeced, outputs):
         print("check")
-        assert np.all(abs(a-b) < 1e-4)
+        assert np.all(abs(a - b) < 1e-4)
 
     print("pass")

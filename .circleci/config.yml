@@ -45,6 +45,26 @@ jobs:
           command: |
             poetry run pysen run lint
 
+  test-by-examples:
+    docker:
+      - image: *onnigiri-ci-base-image
+        auth: &docker-hub-auth
+          username: $DOCKER_USER
+          password: $DOCKER_PASS
+    steps:
+      - checkout
+      - poetry-install
+      - run:
+          name: check ultraface
+          working_directory: examples
+          command: |
+            poetry run make -C ultraface check
+      - run:
+          name: check ssd
+          working_directory: examples
+          command: |
+            poetry run make -C ssd check
+
   validate-version-with-tag:
     docker:
       - image: *onnigiri-ci-base-image
@@ -78,6 +98,9 @@ workflows:
   commit:
     jobs:
       - lint:
+          context:
+            - docker-hub-creds
+      - test-by-examples:
           context:
             - docker-hub-creds
 

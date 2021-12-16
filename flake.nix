@@ -10,15 +10,21 @@
         pkgs = nixpkgs.legacyPackages.${system};
         py = pkgs.python38;
         packageName = "onnigiri";
-        customOverrides = self: super: rec {
-            platformdirs = py.pkgs.platformdirs;
+        customOverrides = self: super: {
+          platformdirs = super.platformdirs.overridePythonAttrs (
+            old: {
+              postPatch = "";
+            }
+          );
         };
       in
       {
         packages.${packageName} = pkgs.poetry2nix.mkPoetryApplication {
           projectDir = ./.;
           python = py;
-          overrides = [ pkgs.poetry2nix.defaultPoetryOverrides customOverrides ];
+          overrides = pkgs.poetry2nix.overrides.withDefaults (
+            customOverrides
+          );
           preferWheels = true;
         };
 
@@ -32,8 +38,6 @@
             py.pkgs.jedi-language-server
             py.pkgs.poetry
           ];
-
-          inputsFrom = builtins.attrValues self.packages.${system};
 
           shellHook = ''
             export LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath [ pkgs.stdenv.cc.cc ]}

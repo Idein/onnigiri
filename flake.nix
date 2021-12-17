@@ -16,6 +16,19 @@
               postPatch = "";
             }
           );
+
+          onnxruntime = super.onnxruntime.overridePythonAttrs (
+            old: {
+              nativeBuildInputs = [ ];
+              postFixup =
+                let rPath = pkgs.lib.makeLibraryPath [ pkgs.stdenv.cc.cc ];
+                in
+                ''
+                  rrPath=${rPath}
+                  find $out/lib -name '*.so' -exec patchelf --add-rpath "$rrPath" {} \;
+                '';
+            }
+          );
         };
       in
       {

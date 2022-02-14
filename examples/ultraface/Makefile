@@ -1,7 +1,7 @@
 .PHONY: check clean
 
 ultraface.onnx:
-	wget -O $@ 'https://github.com/onnx/models/raw/master/vision/body_analysis/ultraface/models/version-RFB-640.onnx'
+	wget -O $@ 'https://github.com/onnx/models/raw/main/vision/body_analysis/ultraface/models/version-RFB-640.onnx'
 
 ultraface-main.onnx: ultraface.onnx
 	onnigiri $^ -o $@ --from input --to 314

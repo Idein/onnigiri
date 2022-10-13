@@ -15,12 +15,27 @@ $ pip3 install onnigiri
 
 - [PyPI](https://pypi.org/project/onnigiri/)
 
+```
+$ docker pull idein/onnigiri:released
+or
+$ docker pull idein/onnigiri:latest
+```
+
+- [Dockerhub](https://hub.docker.com/repository/docker/idein/onnigiri)
+
 ## Usage
 [SSD](https://github.com/onnx/models/tree/main/vision/object_detection_segmentation/ssd)
 
 ```
 $ onnigiri ssd-10.onnx -o ssd-10-main.onnx --from image --to Transpose_472 Transpose_661
 $ onnigiri ssd-10.onnx -o ssd-10-post.onnx --from Transpose_472 Transpose_661 --to bboxes labels scores
+```
+
+Using docker:
+
+```
+$ docker run --rm -it -u $UID:$GID -v $(pwd):/work idein/onnigiri:latest ssd-10.onnx -o ssd-10-main.onnx --from image --to Transpose_472 Transpose_661
+$ docker run --rm -it -u $UID:$GID -v $(pwd):/work idein/onnigiri:latest ssd-10.onnx -o ssd-10-post.onnx  --from Transpose_472 Transpose_661 --to bboxes labels scores
 ```
 
 [UltraFace](https://github.com/onnx/models/tree/main/vision/body_analysis/ultraface)

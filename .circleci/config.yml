@@ -81,13 +81,17 @@ jobs:
       - run:
           name: Build docker image
           command: |
-            nix --experimental-features 'nix-command flakes' build '.#dockerimage' -o image
+            nix --experimental-features 'nix-command flakes' build '.#dockerimage' -o image -L
       - run:
           name: Debug info
           command: |
             ls -lh
       - setup_remote_docker:
-          version: 20.10.14
+          version: 20.10.7
+      - run:
+          name: Install docker client
+          command: |
+            nix-env -iA nixpkgs.docker-client
       - docker-login
       - run:
           name: Load image

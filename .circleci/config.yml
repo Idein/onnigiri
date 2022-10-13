@@ -29,6 +29,11 @@ commands:
           key: *cache-key-poetry
           paths:
             - ".venv"
+  docker-login:
+    steps:
+      - run:
+          name: Login to docker registry
+          command: docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
 
 jobs:
   lint:
@@ -64,6 +69,35 @@ jobs:
           working_directory: examples
           command: |
             poetry run make -C ssd check
+
+  build-dockerimage:
+    docker:
+      - image: nixos/nix:2.8.1
+        auth: &docker-hub-auth
+          username: $DOCKER_USER
+          password: $DOCKER_PASS
+    steps:
+      - checkout
+      - run:
+          name: Build docker image
+          command: |
+            nix --experimental-features 'nix-command flakes' build '.#dockerimage' -o image
+      - run:
+          name: Debug info
+          command: |
+            ls -lh
+      - setup_remote_docker:
+          version: 20.10.14
+      - docker-login
+      - run:
+          name: Load image
+          command: |
+            docker load < ./image
+      - run:
+          name: Debug info
+          command: |
+            docker images
+
 
   validate-version-with-tag:
     docker:
@@ -101,6 +135,9 @@ workflows:
           context:
             - docker-hub-creds
       - test-by-examples:
+          context:
+            - docker-hub-creds
+      - build-dockerimage:
           context:
             - docker-hub-creds
 

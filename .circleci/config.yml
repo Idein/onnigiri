@@ -81,10 +81,6 @@ jobs:
           password: $DOCKER_PASS
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - nix-cache-{{ checksum "flake.lock" }}-{{ checksum "flake.nix" }}
-            - nix-cache-{{ checksum "flake.lock" }}
       - run:
           name: Build docker image
           command: |
@@ -112,6 +108,7 @@ jobs:
             - run:
                 name: Push image
                 command: |
+                  docker push idein/onnigiri:latest
                   docker push idein/onnigiri:released
                   docker push idein/onnigiri:${TAG}
       - unless:
@@ -126,10 +123,6 @@ jobs:
                 command: |
                   docker push idein/onnigiri:latest
                   docker push idein/onnigiri:build-${CIRCLE_BUILD_NUM}
-      - save_cache:
-          key: nix-cache-{{ checksum "flake.lock" }}-{{ checksum "flake.nix" }}
-          paths:
-            - /nix/store
 
 
   validate-version-with-tag:

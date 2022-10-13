@@ -53,6 +53,13 @@ onnigiri apply [onnx-simplifier](https://github.com/daquexian/onnx-simplifier) b
 $ poetry install
 ```
 
+### Build docker image
+
+```
+$ nix build '.#dockerimage' -o image
+$ docker load < ./image
+```
+
 ## Related project
 
 - [onnion](https://github.com/Idein/onnion)

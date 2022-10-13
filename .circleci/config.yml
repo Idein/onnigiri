@@ -29,6 +29,11 @@ commands:
           key: *cache-key-poetry
           paths:
             - ".venv"
+  docker-login:
+    steps:
+      - run:
+          name: Login to docker registry
+          command: docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
 
 jobs:
   lint:
@@ -64,6 +69,61 @@ jobs:
           working_directory: examples
           command: |
             poetry run make -C ssd check
+
+  build-dockerimage:
+    parameters:
+      release:
+        type: boolean
+    docker:
+      - image: nixos/nix:2.8.1
+        auth: &docker-hub-auth
+          username: $DOCKER_USER
+          password: $DOCKER_PASS
+    steps:
+      - checkout
+      - run:
+          name: Build docker image
+          command: |
+            nix --experimental-features 'nix-command flakes' build '.#dockerimage' -o image -L
+      - setup_remote_docker:
+          version: 20.10.7
+      - run:
+          name: Install docker client
+          command: |
+            nix-env -iA nixpkgs.docker-client
+      - docker-login
+      - run:
+          name: Load image
+          command: |
+            docker load < ./image
+      - when:
+          condition: << parameters.release >>
+          steps:
+            - run:
+                name: Change image tag
+                command: |
+                  TAG=$(echo ${CIRCLE_TAG} |sed -e 's/onnigiri-//')
+                  docker tag idein/onnigiri:latest idein/onnigiri:released
+                  docker tag idein/onnigiri:latest idein/onnigiri:${TAG}
+            - run:
+                name: Push image
+                command: |
+                  docker push idein/onnigiri:latest
+                  docker push idein/onnigiri:released
+                  docker push idein/onnigiri:${TAG}
+      - unless:
+          condition: << parameters.release >>
+          steps:
+            - run:
+                name: Change image tag
+                command: |
+                  docker tag idein/onnigiri:latest idein/onnigiri:build-${CIRCLE_BUILD_NUM}
+            - run:
+                name: Push image
+                command: |
+                  docker push idein/onnigiri:latest
+                  docker push idein/onnigiri:build-${CIRCLE_BUILD_NUM}
+
 
   validate-version-with-tag:
     docker:
@@ -103,6 +163,10 @@ workflows:
       - test-by-examples:
           context:
             - docker-hub-creds
+      - build-dockerimage:
+          release: false
+          context:
+            - docker-hub-creds
 
   release-onnigiri:
     jobs:
@@ -115,6 +179,13 @@ workflows:
             branches:
               ignore: /.*/
       - deploy-package:
+          context:
+            - docker-hub-creds
+          requires:
+            - validate-version-with-tag
+          filters: *release-filter
+      - build-dockerimage:
+          release: true
           context:
             - docker-hub-creds
           requires:

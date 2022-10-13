@@ -188,4 +188,6 @@ workflows:
           release: true
           context:
             - docker-hub-creds
+          requires:
+            - validate-version-with-tag
           filters: *release-filter

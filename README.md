@@ -17,9 +17,7 @@ $ pip3 install onnigiri
 From [Dockerhub](https://hub.docker.com/repository/docker/idein/onnigiri)
 
 ```
-$ docker pull idein/onnigiri:YYYYMMDD # YYYYMMDD is released date.
-or
-$ docker pull idein/onnigiri:latest
+$ docker pull idein/onnigiri:20221014
 ```
 
 
@@ -34,8 +32,8 @@ $ onnigiri ssd-10.onnx -o ssd-10-post.onnx --from Transpose_472 Transpose_661 --
 With docker:
 
 ```
-$ docker run --rm -it -u $UID:$GID -v $(pwd):/work idein/onnigiri:latest ssd-10.onnx -o ssd-10-main.onnx --from image --to Transpose_472 Transpose_661
-$ docker run --rm -it -u $UID:$GID -v $(pwd):/work idein/onnigiri:latest ssd-10.onnx -o ssd-10-post.onnx  --from Transpose_472 Transpose_661 --to bboxes labels scores
+$ docker run --rm -it -u $UID:$GID -v $(pwd):/work idein/onnigiri:20221014 ssd-10.onnx -o ssd-10-main.onnx --from image --to Transpose_472 Transpose_661
+$ docker run --rm -it -u $UID:$GID -v $(pwd):/work idein/onnigiri:20221014 ssd-10.onnx -o ssd-10-post.onnx  --from Transpose_472 Transpose_661 --to bboxes labels scores
 ```
 
 [UltraFace](https://github.com/onnx/models/tree/main/vision/body_analysis/ultraface)

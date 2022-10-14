@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "onnigiri"
-version = "0.3.0"
+version = "0.3.1"
 description = "onnx-divider"
 authors = ["Idein Inc."]
 license = "Apache-2.0"

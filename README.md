@@ -17,7 +17,7 @@ $ pip3 install onnigiri
 From [Dockerhub](https://hub.docker.com/repository/docker/idein/onnigiri)
 
 ```
-$ docker pull idein/onnigiri:released
+$ docker pull idein/onnigiri:YYYYMMDD # YYYYMMDD is released date.
 or
 $ docker pull idein/onnigiri:latest
 ```

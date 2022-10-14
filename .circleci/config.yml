@@ -79,6 +79,8 @@ jobs:
         auth: &docker-hub-auth
           username: $DOCKER_USER
           password: $DOCKER_PASS
+    environment:
+      TZ: "JST-9"
     steps:
       - checkout
       - run:
@@ -102,15 +104,13 @@ jobs:
             - run:
                 name: Change image tag
                 command: |
-                  TAG=$(echo ${CIRCLE_TAG} |sed -e 's/onnigiri-//')
-                  docker tag idein/onnigiri:latest idein/onnigiri:released
-                  docker tag idein/onnigiri:latest idein/onnigiri:${TAG}
+                  docker tag idein/onnigiri:latest idein/onnigiri:$(date +%Y%m%d)
+                  docker images
             - run:
                 name: Push image
                 command: |
                   docker push idein/onnigiri:latest
-                  docker push idein/onnigiri:released
-                  docker push idein/onnigiri:${TAG}
+                  docker push idein/onnigiri:$(date +%Y%m%d)
       - unless:
           condition: << parameters.release >>
           steps:
@@ -118,6 +118,7 @@ jobs:
                 name: Change image tag
                 command: |
                   docker tag idein/onnigiri:latest idein/onnigiri:build-${CIRCLE_BUILD_NUM}
+                  docker images
             - run:
                 name: Push image
                 command: |

@@ -11,11 +11,12 @@ repository = "https://github.com/Idein/onnigiri"
 [tool.poetry.dependencies]
 python = "^3.7"
 onnx = "^1.9.0"
-onnx-simplifier = "^0.3.6"
+onnxruntime = "^1.2.0"
+onnx-simplifier = "^0.4"
 
 [tool.poetry.dev-dependencies]
 pysen = {version = "^0.10.1"}
-black = "21.10b0"
+black = "22.3.0"
 flake8 = "4.0.1"
 flake8-bugbear = "21.9.2"
 isort = "5.9.3"

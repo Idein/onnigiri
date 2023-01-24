@@ -1,7 +1,7 @@
 {
   description = "onnigiri";
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
     flake-utils.url = "github:numtide/flake-utils";
   };
   outputs = { self, nixpkgs, flake-utils }:
@@ -45,7 +45,7 @@
           name = "idein/${packageName}";
           tag = "latest";
           created = "now";
-          contents = [ self.packages.${system}.${packageName} ];
+          copyToRoot = [ self.packages.${system}.${packageName} ];
           config = {
             Entrypoint = [ "/bin/onnigiri" ];
             WorkingDir = "/work";

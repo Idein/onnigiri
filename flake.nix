@@ -1,7 +1,7 @@
 {
   description = "onnigiri";
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
   };
   outputs = { self, nixpkgs, flake-utils }:
@@ -59,8 +59,7 @@
             pkgs.protobuf
 
             py
-            py.pkgs.jedi-language-server
-            py.pkgs.poetry
+            pkgs.poetry
           ];
 
           inputsFrom = builtins.attrValues self.packages.${system};

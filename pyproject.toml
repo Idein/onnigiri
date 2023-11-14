@@ -9,17 +9,17 @@ keywords = ["onnx"]
 repository = "https://github.com/Idein/onnigiri"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.9"
 onnx = "^1.9.0"
 onnxruntime = "^1.2.0"
 onnx-simplifier = "^0.4"
 
 [tool.poetry.dev-dependencies]
 pysen = {version = "^0.10.1"}
-black = "22.3.0"
-flake8 = "4.0.1"
-flake8-bugbear = "21.9.2"
-isort = "5.9.3"
+black = "23.11.0"
+flake8 = "6.1.0"
+flake8-bugbear = "23.9.16"
+isort = "5.12.0"
 mypy = "^1.0"
 
 [tool.poetry.scripts]
@@ -39,7 +39,7 @@ enable_isort = true
 enable_mypy = true
 mypy_preset = "strict"
 line_length = 128
-py_version = "py37"
+py_version = "py39"
 
 [[tool.pysen.lint.mypy_targets]]
   paths = ["."]

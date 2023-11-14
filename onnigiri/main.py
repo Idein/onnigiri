@@ -82,14 +82,14 @@ def validate_value_names(input_names: List[str], output_names: List[str], model:
 
 
 def onnigiri(
-    input_path: str, output_path: str, input_names: List[str], output_names: List[str], shapes: Dict[str, List[int]]
+    input_path: str, output_path: str, input_names: List[str], output_names: List[str], shapes: Dict[str, List[int]], optimization: bool
 ) -> None:
     model = onnx.load(input_path)
     if len(shapes) != 0:
         fix_input_shapes(shapes, model)
     check_inputs(model.graph.input)
 
-    simplified_model, check = simplify(model)
+    simplified_model, check = simplify(model, perform_optimization=optimization)
     assert check, "Error: Simplified ONNX model could not be validated"
 
     fix_subgraphs(simplified_model.graph)
@@ -114,11 +114,12 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("input_path", help="Input ONNX path")
     parser.add_argument("-o", "--output", dest="output_path", required=True, help="Output ONNX path")
+    parser.add_argument("--optimization", action=argparse.BooleanOptionalAction, dest="optimization", required=False, help="perform optimization (default: True)", default=True)
     parser.add_argument("--from", nargs="+", dest="input_names", help="Names of input value")
     parser.add_argument("--to", nargs="+", dest="output_names", help="Names of output value")
     parser.add_argument("--fix-input-shape", nargs="+", dest="shapes", default=[], help="Pairs of the name and shape of inputs")
     args = parser.parse_args()
-    onnigiri(args.input_path, args.output_path, args.input_names, args.output_names, parse_shapes(args.shapes))
+    onnigiri(args.input_path, args.output_path, args.input_names, args.output_names, parse_shapes(args.shapes), args.optimization)
 
 
 if __name__ == "__main__":

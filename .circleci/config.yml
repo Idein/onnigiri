@@ -65,6 +65,11 @@ jobs:
           command: |
             poetry run make -C ultraface check
       - run:
+          name: check ultraface (no optimization)
+          working_directory: examples
+          command: |
+            poetry run make -C ultraface check-no-opt
+      - run:
           name: check ssd
           working_directory: examples
           command: |

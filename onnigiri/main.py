@@ -124,7 +124,7 @@ def main() -> None:
         action=argparse.BooleanOptionalAction,
         dest="optimization",
         required=False,
-        help="perform optimization (default: True)",
+        help="perform optimization",
         default=True,
     )
     parser.add_argument("--from", nargs="+", dest="input_names", help="Names of input value")

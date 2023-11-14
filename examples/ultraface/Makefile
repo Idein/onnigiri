@@ -10,10 +10,10 @@ ultraface-post.onnx: ultraface.onnx
 	onnigiri $^ -o $@ --from 314 --to boxes scores
 
 ultraface-main-no-opt.onnx: ultraface.onnx
-	onnigiri $^ -o $@ --from input --to 314
+	onnigiri $^ -o $@ --from input --to 314 --no-optimization
 
 ultraface-post-no-opt.onnx: ultraface.onnx
-	onnigiri $^ -o $@ --from 314 --to boxes scores
+	onnigiri $^ -o $@ --from 314 --to boxes scores --no-optimization
 
 check: ultraface.onnx ultraface-main.onnx ultraface-post.onnx
 	python ../check_model.py ultraface $^

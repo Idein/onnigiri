@@ -29,7 +29,7 @@ if __name__ == "__main__":
         shape = list()
         for d in i.type.tensor_type.shape.dim:
             shape.append(d.dim_value)
-        dtype = onnx.mapping.TENSOR_TYPE_TO_NP_TYPE[i.type.tensor_type.elem_type]
+        dtype = onnx.helper.tensor_dtype_to_np_dtype(i.type.tensor_type.elem_type)
         if len(shape) != 0:
             v = np.random.randn(*shape).astype(dtype)
             inputs[i.name] = v

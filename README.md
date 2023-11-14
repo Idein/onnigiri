@@ -58,7 +58,7 @@ Use [Netron](https://netron.app).
 
 - Why is the extracted subgraph different from the original subgraph?
 
-onnigiri apply [onnx-simplifier](https://github.com/daquexian/onnx-simplifier) before extraction.
+onnigiri apply [onnx-simplifier](https://github.com/daquexian/onnx-simplifier) before extraction. You can disable the graph optimization by the onnx-simplifier using the `--no-optimization` option.
 
 ## Development Guide
 

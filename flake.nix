@@ -3,10 +3,15 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    poetry2nix = {
+      url = "github:nix-community/poetry2nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
-  outputs = { self, nixpkgs, flake-utils }:
+  outputs = { self, nixpkgs, flake-utils, poetry2nix }:
     flake-utils.lib.eachDefaultSystem (system:
       let
+        inherit (poetry2nix.lib.mkPoetry2Nix { inherit pkgs; }) mkPoetryApplication overrides;
         pkgs = nixpkgs.legacyPackages.${system};
         py = pkgs.python39;
         packageName = "onnigiri";
@@ -32,10 +37,10 @@
         };
       in
       {
-        packages.${packageName} = pkgs.poetry2nix.mkPoetryApplication {
+        packages.${packageName} = mkPoetryApplication {
           projectDir = ./.;
           python = py;
-          overrides = pkgs.poetry2nix.overrides.withDefaults (
+          overrides = overrides.withDefaults (
             customOverrides
           );
           preferWheels = true;

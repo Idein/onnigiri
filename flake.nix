@@ -69,9 +69,9 @@
 
           inputsFrom = builtins.attrValues self.packages.${system};
 
-          shellHook = ''
-            export LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath [ pkgs.stdenv.cc.cc ]}
-          '';
+          # shellHook = ''
+          #   export LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath [ pkgs.stdenv.cc.cc ]}
+          # '';
         };
       }
     );

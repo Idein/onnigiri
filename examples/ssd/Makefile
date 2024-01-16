@@ -1,7 +1,7 @@
 .PHONY: check clean
 
 ssd-10.onnx:
-	wget -O $@ https://github.com/onnx/models/raw/main/archive/vision/object_detection_segmentation/ssd/model/ssd-10.onnx
+	wget -O $@ https://github.com/onnx/models/raw/main/validated/vision/object_detection_segmentation/ssd/model/ssd-10.onnx
 
 ssd-10-main.onnx: ssd-10.onnx
 	onnigiri ssd-10.onnx -o ssd-10-main.onnx --from image --to Transpose_472 Transpose_661

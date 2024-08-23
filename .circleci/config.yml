@@ -92,8 +92,7 @@ jobs:
           name: Build docker image
           command: |
             nix --experimental-features 'nix-command flakes' build '.#dockerimage' -o image -L
-      - setup_remote_docker:
-          version: 20.10.7
+      - setup_remote_docker
       - run:
           name: Install docker client
           command: |
@@ -129,7 +128,6 @@ jobs:
                 command: |
                   docker push idein/onnigiri:latest
                   docker push idein/onnigiri:build-${CIRCLE_BUILD_NUM}
-
 
   validate-version-with-tag:
     docker:

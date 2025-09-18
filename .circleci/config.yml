@@ -1,7 +1,7 @@
 version: 2.1
 
 references:
-  onnigiri-ci-base-image: &onnigiri-ci-base-image "python:3.11-slim-bookworm"
+  onnigiri-ci-base-image: &onnigiri-ci-base-image "python:3.11-bookworm"
 
 commands:
   install-python-dev-tools:

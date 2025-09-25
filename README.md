@@ -69,8 +69,7 @@ $ poetry install
 ### Build docker image
 
 ```
-$ nix build '.#dockerimage' -o image
-$ docker load < ./image
+$ docker build --build-arg VERSION=$(poetry version -s) -t idein/onnigiri:latest .
 ```
 
 ## Related project

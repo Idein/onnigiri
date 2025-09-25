@@ -14,7 +14,7 @@ onnx = "^1.9.0"
 onnxruntime = "^1.2.0"
 onnx-simplifier = "^0.4"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 pysen = {version = "^0.10.1"}
 black = "23.11.0"
 flake8 = "6.1.0"

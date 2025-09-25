@@ -1,7 +1,7 @@
 version: 2.1
 
 references:
-  onnigiri-ci-base-image: &onnigiri-ci-base-image "python:3.9-bullseye"
+  onnigiri-ci-base-image: &onnigiri-ci-base-image "python:3.11-bookworm"
 
 commands:
   install-python-dev-tools:
@@ -24,11 +24,18 @@ commands:
             echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
             source $BASH_ENV
             poetry config virtualenvs.in-project true
-            poetry install --no-ansi
+            poetry install --no-ansi --all-groups
       - save_cache:
           key: *cache-key-poetry
           paths:
             - ".venv"
+  install-docker-cli:
+    steps:
+      - run:
+          name: Install Docker CLI
+          command: |
+            apt-get update
+            apt-get install -y --no-install-recommends docker.io
   docker-login:
     steps:
       - run:
@@ -80,7 +87,7 @@ jobs:
       release:
         type: boolean
     docker:
-      - image: nixos/nix:2.8.1
+      - image: *onnigiri-ci-base-image
         auth: &docker-hub-auth
           username: $DOCKER_USER
           password: $DOCKER_PASS
@@ -88,20 +95,15 @@ jobs:
       TZ: "JST-9"
     steps:
       - checkout
-      - run:
-          name: Build docker image
-          command: |
-            nix --experimental-features 'nix-command flakes' build '.#dockerimage' -o image -L
+      - poetry-install
+      - install-docker-cli
       - setup_remote_docker
-      - run:
-          name: Install docker client
-          command: |
-            nix-env -iA nixpkgs.docker-client
       - docker-login
       - run:
-          name: Load image
+          name: Build image
           command: |
-            docker load < ./image
+            poetry build
+            docker build --build-arg VERSION=$(poetry version -s) -t idein/onnigiri:latest .
       - when:
           condition: << parameters.release >>
           steps:
@@ -140,7 +142,7 @@ jobs:
           name: Check if git tag name is appropriate for package version
           command: |
             TAG=$(echo ${CIRCLE_TAG} |sed -e 's/onnigiri-//')
-            VERSION=$(poetry run python -c 'import pkg_resources; print(pkg_resources.get_distribution("onnigiri").version)')
+            VERSION=$(poetry version -s)
             echo "Git tag: $TAG"
             echo "Package version: $VERSION"
             test "$VERSION" = "$TAG"
